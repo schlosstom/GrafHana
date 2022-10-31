@@ -31,7 +31,7 @@ By simply running docker-compose the following container will be created:
 
 ```
 
-**Important: 
+** Important: 
 The SAP HANA installation files (DATA_UNITS/HDB_SERVER_LINUX_X86_64) are not included.
 They have to download and add separately.
 ---
