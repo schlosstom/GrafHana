@@ -1,0 +1,10 @@
+# ./hdblcm --dump_configfile_template=templateFile --action install
+# docker build --tag=hana:latest hana/
+# docker-compose --compatibility up -d
+# docker exec -it hana01  /bin/bash -c "cd /src && cat templateFile.xml | ./hdblcm --action=install -b --configfile=templateFile --read_password_from_stdin=xml"
+# docker exec -it hana01 /bin/bash
+# docker-compose down
+
+
+
+

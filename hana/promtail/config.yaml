@@ -1,0 +1,44 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+- job_name: services
+  static_configs:
+  - targets:
+      - localhost 
+    labels:
+      job: service-available
+      host: hana01
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/system_availability_hana01.trc
+
+  pipeline_stages: 
+  - match:
+      selector: '{job="service-available"}'
+      stages:
+      - regex:
+          expression: '^(?:.*?;){4}(?P<Action>.*?);(?P<Watchdog>.*?);(?:.*?;){9}(?P<Service>.*?);.*$'
+      - labels:
+          Action:
+          Service: 
+          Watchdog:
+
+- job_name: indexserver
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: indexserver-details
+      host: hana01
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/DB_HA0/indexserver_hana01.30003.000.trc
+
+
+            
+
+
