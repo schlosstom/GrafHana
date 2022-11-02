@@ -84,5 +84,10 @@ They have to download and add separately.
   * Loki 2.6.1  
 
 
+## TODO
+  * disk size limit for the HANA container
+  * add node-exporter and prometheus 
+  * Test on newer HANA version (current is about 1 year old)
+  * Create a Dockerfile to be able to build an image with a installed HANA
 
 
