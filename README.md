@@ -53,8 +53,8 @@ They have to download and add separately.
 
   3. Because we install HANA in batch mode we have to create the config files first.  
      **./hdblcm --dump_configfile_template=templateFile --action install**  
-     The file templateFile and templateFile.xml can ge changed to you needs.    
-     An example can be fond in the folder example. 
+     The file templateFile and templateFile.xml can be changed to you needs.    
+     An example can be found in the folder example. 
 
   4. Build the HANA docker container:  
      **docker build --tag=hana:latest hana/**
@@ -63,7 +63,7 @@ They have to download and add separately.
 # Deployment
 
   Run:  
-  **docker-compose up -d**
+  **docker-compose --compatibility up -d**
 
   The progress of the HANA installation can be checked with:  
   **docker logs -f hana01**
