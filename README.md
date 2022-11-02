@@ -44,7 +44,7 @@ They have to download and add separately.
 
 # Preparation
 
-  0. The system to run all the container needs at least 16 GB RAM and about 50 GB ofdiskspace.
+  0. The system to run all the container needs at least 16 GB RAM and about 50 GB of diskspace.
 
   1. Download and unpack the original HANA sources from SAP.
 
@@ -78,6 +78,10 @@ They have to download and add separately.
     **docker exec -it hana01 /bin/bash**
     
 
+# Tested with:
+  * HANA 2.00.060  
+  * Grafana 9.2.1  
+  * Loki 2.6.1  
 
 
 
