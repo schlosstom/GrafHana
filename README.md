@@ -14,7 +14,8 @@ By simply running docker-compose the following container will be created:
 
   ├── docker-compose.yaml
   ├── grafana
-  │   └── var_lib_grafana
+  │   ├── data
+  │   └── etc
   ├── hana
   │   ├── (DATA_UNITS)
   │   │   └── (HDB_SERVER_LINUX_X86_64)
@@ -45,16 +46,16 @@ They have to download and add separately.
 
   1. Download and unpack the original HANA sources from SAP.
 
-  2. Copy the files to the directory hana (see Directory structure above)
+  2. Copy the files to the directory hana (see Directory structure above)  
      In our example we only need "DATA_UNIT/HDB_SERVER_LINUX_X86_64/".
 
-  3. Because we install HANA in batch mode we have to create the config files first.
+  3. Because we install HANA in batch mode we have to create the config files first.  
      ./hdblcm --dump_configfile_template=templateFile --action install
 
-  4. Change the file templateFile and templateFile.xml to you needs.
+  4. Change the file templateFile and templateFile.xml to you needs.  
      (examples can be find in the folder example) 
 
-  5. Build the HANA docker container:
+  5. Build the HANA docker container:  
      docker build --tag=hana:latest hana/
 
 
