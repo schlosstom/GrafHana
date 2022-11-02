@@ -12,11 +12,12 @@ services:
     networks:
       - grafana
     volumes:
-      - ./grafana:/var/lib/grafana
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/etc:/etc/grafana/  
         
     environment:
       - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
-    user: "0"    
+    user: "1000"    
 
   loki:
     image: grafana/loki:2.6.1

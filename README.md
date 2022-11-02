@@ -41,6 +41,8 @@ They have to download and add separately.
 
 # Preparation
 
+  0. The system to run all the container needs at least 16 GB RAM and about50 GB ofdiskspace.
+
   1. Download and unpack the original HANA sources from SAP.
 
   2. Copy the files to the directory hana (see Directory structure above)
@@ -59,6 +61,9 @@ They have to download and add separately.
 # Deployment
 
   Run: docker-compose up -d
+
+  The progress of the HANA installation can be checked with:
+  docker logs -f hana01
 
 
 # Usage
