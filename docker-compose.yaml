@@ -49,6 +49,6 @@ services:
       - /bin/bash
       - -c
       - |
-        cd /src && cat templateFile.xml | ./hdblcm --action=install -b --configfile=templateFile --read_password_from_stdin=xml
+        cd /src && cat templateFile.xml | ./hdblcm --action=install --ignore=check_min_mem -b --configfile=templateFile --read_password_from_stdin=xml
         promtail-linux-amd64 -config.file=/etc/promtail/config.yaml
         
