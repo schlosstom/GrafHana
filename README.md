@@ -47,7 +47,7 @@ They have to download and add separately.
   1. Download and unpack the original HANA sources from SAP.
 
   2. Copy the files to the directory hana (see Directory structure above)  
-     In our example we only need "**DATA_UNIT/HDB_SERVER_LINUX_X86_64/**".
+     In our example we only need **DATA_UNIT/HDB_SERVER_LINUX_X86_64/**.
 
   3. Because we install HANA in batch mode we have to create the config files first.  
      **./hdblcm --dump_configfile_template=templateFile --action install**
@@ -61,9 +61,10 @@ They have to download and add separately.
 
 # Deployment
 
-  Run: **docker-compose up -d**
+  Run:  
+  **docker-compose up -d**
 
-  The progress of the HANA installation can be checked with:
+  The progress of the HANA installation can be checked with:  
   **docker logs -f hana01**
 
 
