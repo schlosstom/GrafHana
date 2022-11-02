@@ -72,7 +72,7 @@ They have to download and add separately.
   * Grafana Dashboard: 
     http://localhost:3000
 
-  * Exec console into HANA: 
+  * Exec console into HANA:   
     docker exec -it hana01 /bin/bash
     
 
