@@ -6,9 +6,21 @@ to 2.5 CPUs to avoid any high CPU pressure of the whole system (see docker-compo
 
 Running docker-compose the following container will be created:
 
-  * HANA single DB including promtail (SAP HANA sources are needed - see describtion below)
-  * Grafana Loki
-  * Grafana Dashboard
+  * hana01 
+      * hana 2.0 (HANA installation source is needed - see below)
+      * promtail
+      * node-exporter
+
+  * loki
+      * grafana loki 
+
+  * prometheus
+      * grafana prometheus
+   
+  * grafana
+      * grafana dashboard
+
+
 
 # Directory structure
 
@@ -28,6 +40,8 @@ Running docker-compose the following container will be created:
   ├── loki
   │      ├── data
   │      └── loki.yaml
+  ├── prometheus
+  │      └── prometheus.yml
   └──examples  
      ├── commands.txt
      ├── templateFile
@@ -74,20 +88,11 @@ They have to download and add separately.
   * Grafana Dashboard: 
     **http://localhost:3000**
 
+  * Grafana Prometheus:
+    **http://localhost:9090**
+
   * Exec console into HANA:   
     **docker exec -it hana01 /bin/bash**
-    
 
-## Tested with:
-  * HANA 2.00.060  
-  * Grafana 9.2.1  
-  * Loki 2.6.1  
-
-
-## TODO
-  * disk size limit for the HANA container
-  * add node-exporter and prometheus 
-  * Test on newer HANA version (current is about 1 year old)
-  * Create a Dockerfile to be able to build an image with a installed HANA
 
 

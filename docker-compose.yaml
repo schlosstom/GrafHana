@@ -30,11 +30,22 @@ services:
       - ./loki:/mnt/config
     command: -config.file=/mnt/config/loki.yaml
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    networks:
+      - grafana
+    volumes:
+      - ./prometheus:/etc/prometheus
+#    command: -config.file=/etc/prometheus/prometheus.yaml 
+
   hana:
     image: hana:latest
     container_name: hana01
     hostname: hana01
-    privileged: true 
+    privileged: true
     networks:
       - grafana
     volumes:
@@ -49,6 +60,7 @@ services:
       - /bin/bash
       - -c
       - |
-        cd /src && cat templateFile.xml | ./hdblcm --action=install --ignore=check_min_mem -b --configfile=templateFile --read_password_from_stdin=xml
-        promtail-linux-amd64 -config.file=/etc/promtail/config.yaml
+        #        cd /src && cat templateFile.xml | ./hdblcm --action=install --ignore=check_min_mem -b --configfile=templateFile --read_password_from_stdin=xml
+        promtail-linux-amd64 -config.file=/etc/promtail/config.yaml &
+        node_exporter
         
