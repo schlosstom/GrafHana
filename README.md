@@ -4,7 +4,7 @@ GrafHana (Grafana and HANA on docker) is a collection of docker containers for d
 The underlying system should have at least 16G of RAM and about 50 GB disk space. CPU for the HANA docker container is limited 
 to 2.5 CPUs to avoid any high CPU pressure of the whole system (see docker-compose.yaml:limits: cpus: '2.5')
 
-Running docker-compose the following container will be created:
+**Running docker-compose the following container will be created:**
 
   * hana01 
       * hana 2.0 (HANA installation source is needed - see below)
