@@ -19,7 +19,6 @@ RUN cp promtail-linux-amd64 /usr/bin/
 RUN mkdir /etc/promtail
 
 # Install node-exporter
-# Install node-exporter
 RUN curl -O -L "https://github.com/prometheus/node_exporter/releases/download/v1.4.0/node_exporter-1.4.0.linux-amd64.tar.gz"
 RUN tar xf node_exporter-1.4.0.linux-amd64.tar.gz
 RUN cp node_exporter-1.4.0.linux-amd64/node_exporter /usr/bin/
