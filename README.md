@@ -111,7 +111,7 @@ The config is currently collecting the following files:
  *  system_availability*.trc
 
 ## Promtail-ext
-An promtail client outside of HANA where logs and trace file can be copied (GrafHana/promtail-ext/logs/).
-(the promtail config is the same like above but with hhostname **extern"" )
+An promtail client outside of HANA where logs and trace file can be copied (GrafHana/promtail-ext/logs/).  
+(the promtail config is the same like above but with hostname **extern** )
 
 
