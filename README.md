@@ -12,7 +12,10 @@ to 2.5 CPUs to avoid any high CPU pressure of the whole system (see docker-compo
       * node-exporter
 
   * loki
-      * grafana loki 
+      * grafana loki
+
+  * promtail-ext
+      * an extra promtail container where you can but external logs and traces 
 
   * prometheus
       * grafana prometheus
@@ -35,13 +38,18 @@ to 2.5 CPUs to avoid any high CPU pressure of the whole system (see docker-compo
   │   │   └── (HDB_SERVER_LINUX_X86_64)
   │   ├── Dockerfile
   │   ├── promtail
-  │   │   └── config.yaml
+  │   │   └── etc
+  │   │       └── promtail.yml
   │   └── start.sh
   ├── loki
-  │      ├── data
-  │      └── loki.yaml
+  │       ├── data
+  │       └── loki.yaml
+  ├── promtail-ext
+  │   ├── logs
+  │   └── etc
+  │       └── promtail.yml
   ├── prometheus
-  │      └── prometheus.yml
+  │       └── prometheus.yml
   └──examples  
      ├── commands.txt
      ├── templateFile
@@ -94,5 +102,16 @@ They have to download and add separately.
   * Exec console into HANA:   
     **docker exec -it hana01 /bin/bash**
 
+
+# Promtail
+The config is currently collecting the following files:
+
+ *  SAP tracefiles *.trc
+ *  SAP logfiles *.log
+ *  system_availability*.trc
+
+## Promtail-ext
+An promtail client outside of HANA where logs and trace file can be copied (GrafHana/promtail-ext/logs/).
+(the promtail config is the same like above but with hhostname **extern"" )
 
 

@@ -10,7 +10,8 @@ RUN zypper --non-interactive in libatomic1 \
                                 hostname \
                                 unzip \
                                 tar \
-                                gzip
+                                gzip \
+                                vim
 
 # Install promtail
 RUN curl -O -L "https://github.com/grafana/loki/releases/download/v2.6.1/promtail-linux-amd64.zip"
@@ -22,6 +23,7 @@ RUN mkdir /etc/promtail
 RUN curl -O -L "https://github.com/prometheus/node_exporter/releases/download/v1.4.0/node_exporter-1.4.0.linux-amd64.tar.gz"
 RUN tar xf node_exporter-1.4.0.linux-amd64.tar.gz
 RUN cp node_exporter-1.4.0.linux-amd64/node_exporter /usr/bin/
+
 
 
 
