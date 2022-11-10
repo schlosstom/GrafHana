@@ -15,8 +15,8 @@ scrape_configs:
       - localhost 
     labels:
       job: service-available
-      host: hana01
-      __path__: /usr/sap/HA0/HDB00/hana01/trace/system_availability_hana01.trc
+      host: extern
+      __path__: /var/log/system_availability*.trc
 
   pipeline_stages: 
   - match:
@@ -29,16 +29,25 @@ scrape_configs:
           Service: 
           Watchdog:
 
-- job_name: indexserver
+
+- job_name: trace
   static_configs:
   - targets:
       - localhost
     labels:
-      job: indexserver-details
-      host: hana01
-      __path__: /usr/sap/HA0/HDB00/hana01/trace/DB_HA0/indexserver_hana01.30003.000.trc
+      job: tracefiles
+      host: extern
+      __path__: /var/log/*.trc
 
 
-            
+- job_name: logs
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: logfile
+      host: extern
+      __path__: /var/log/*.log
+    
 
 

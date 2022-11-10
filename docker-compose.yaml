@@ -30,6 +30,16 @@ services:
       - ./loki:/mnt/config
     command: -config.file=/mnt/config/loki.yaml
 
+  promtail-ext:
+    image: grafana/promtail:2.6.1
+    container_name: promtail-ext    
+    volumes:
+      - ./promtail-ext/logs:/var/log
+      - ./promtail-ext/etc:/etc/promtail
+    command: -config.file=/etc/promtail/promtail.yml
+    networks:
+      - grafana
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -39,7 +49,6 @@ services:
       - grafana
     volumes:
       - ./prometheus:/etc/prometheus
-#    command: -config.file=/etc/prometheus/prometheus.yaml 
 
   hana:
     image: hana:latest
@@ -50,7 +59,7 @@ services:
       - grafana
     volumes:
       - ./hana/DATA_UNITS/HDB_SERVER_LINUX_X86_64:/src
-      - ./hana/promtail:/etc/promtail  
+      - ./hana/promtail/etc:/etc/promtail
     deploy:
       resources:
         limits:
@@ -61,6 +70,6 @@ services:
       - -c
       - |
         cd /src && cat templateFile.xml | ./hdblcm --action=install --ignore=check_min_mem -b --configfile=templateFile --read_password_from_stdin=xml
-        promtail-linux-amd64 -config.file=/etc/promtail/config.yaml &
+        promtail-linux-amd64 -config.file=/etc/promtail/promtail.yml &
         node_exporter
         
