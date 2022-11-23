@@ -9,73 +9,26 @@ clients:
   - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-- job_name: services
-  static_configs:
-  - targets:
-      - localhost 
-    labels:
-      job: service-available
-      host: hana01
-      __path__: /usr/sap/HA0/HDB00/hana01/trace/system_availability*.trc
-
-  pipeline_stages: 
-  - match:
-      selector: '{job="service-available"}'
-      stages:
-      - regex:
-          expression: '^(?:.*?;){4}(?P<Action>.*?);(?P<Watchdog>.*?);(?:.*?;){9}(?P<Service>.*?);.*$'
-      - labels:
-          Action:
-          Service: 
-          Watchdog:
-
-
-- job_name: nameserver
+ 
+- job_name: tracefiles
   static_configs:
   - targets:
       - localhost
     labels:
-      job: nameserver-unit
+      job: tracefiles
       host: hana01
-      __path__: /usr/sap/HA0/HDB00/hana01/trace/nameserver_hana01.30001.000.trc
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/*.trc
 
-  pipeline_stages:
-  - match:
-      selector: '{job="nameserver-unit"}'
-      stages:
-      - regex:
-          expression: '^(?:.*?\s){4}(?P<Unit>.*?)\s.*$'
-      - labels:
-          Unit:
+ 
 
-
-- job_name: indexserver
+- job_name: logfiles
   static_configs:
   - targets:
       - localhost
     labels:
-      job: indexserver-unit
+      job: logfiles
       host: hana01
-      __path__: /usr/sap/HA0/HDB00/hana01/trace/DB_HA0/indexserver_hana01.30003.000.trc
-
-  pipeline_stages:
-  - match:
-      selector: '{job="indexserver-unit"}'
-      stages:
-      - regex:
-          expression: '^(?:.*?\s){4}(?P<Unit>.*?)\s.*$'
-      - labels:
-          Unit:
-
-
-- job_name: backup
-  static_configs:
-  - targets:
-      - localhost
-    labels:
-      job: backup
-      host: hana01
-      __path__: /usr/sap/HA0/HDB00/hana01/trace/DB_HA0/backup.log
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/DB_HA0/*.log
     
 
 
