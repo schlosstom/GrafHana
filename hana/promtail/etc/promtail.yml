@@ -29,24 +29,53 @@ scrape_configs:
           Service: 
           Watchdog:
 
-- job_name: trace
+
+- job_name: nameserver
   static_configs:
   - targets:
       - localhost
     labels:
-      job: tracefiles
+      job: nameserver-unit
       host: hana01
-      __path__: /usr/sap/HA0/HDB00/hana01/trace/*.trc
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/nameserver_hana01.30001.000.trc
+
+  pipeline_stages:
+  - match:
+      selector: '{job="nameserver-unit"}'
+      stages:
+      - regex:
+          expression: '^(?:.*?\s){4}(?P<Unit>.*?)\s.*$'
+      - labels:
+          Unit:
 
 
-- job_name: logs
+- job_name: indexserver
   static_configs:
   - targets:
       - localhost
     labels:
-      job: logfile
+      job: indexserver-unit
       host: hana01
-      __path__: /usr/sap/HA0/HDB00/hana01/trace/*.log
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/DB_HA0/indexserver_hana01.30003.000.trc
+
+  pipeline_stages:
+  - match:
+      selector: '{job="indexserver-unit"}'
+      stages:
+      - regex:
+          expression: '^(?:.*?\s){4}(?P<Unit>.*?)\s.*$'
+      - labels:
+          Unit:
+
+
+- job_name: backup
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: backup
+      host: hana01
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/DB_HA0/backup.log
     
 
 

@@ -68,5 +68,6 @@ ruler:
   enable_api: true
  # enable_alertmananger_v2: true
           
-
+query_scheduler:
+  max_outstanding_requests_per_tenant: 2048
 

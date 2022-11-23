@@ -30,14 +30,23 @@ scrape_configs:
           Watchdog:
 
 
-- job_name: trace
+- job_name: nameserver
   static_configs:
   - targets:
       - localhost
     labels:
-      job: tracefiles
+      job: nameserver-unit
       host: extern
-      __path__: /var/log/*.trc
+      __path__: /var/log/nameserver_kdreh0predb1.00000.765.trc
+
+  pipeline_stages:
+  - match:
+      selector: '{job="nameserver-unit"}'
+      stages:
+      - regex:
+          expression: '^(?:.*?\s){4}(?P<Unit>.*?)\s.*$'
+      - labels:
+          Unit:
 
 
 - job_name: logs
