@@ -1,3 +1,5 @@
 hana/DATA_UNITS
-grafana/data
-promtail-ext/logs
+restart-ext.sh
+.vscode
+presentation
+conf/alertmanager.yml

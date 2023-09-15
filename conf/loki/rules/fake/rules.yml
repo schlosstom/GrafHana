@@ -1,0 +1,45 @@
+groups:
+    # This rule will be triggered if someone tried to login via ssh on the docker host with wrong passord.
+    # 
+    # Dependecies:
+    # * docker-compose file: hana need the volume: - /var/log/:/logs 
+    # * promtail need a job with: __path__: /logs/messages
+    # 
+    # 
+    # The example log line (/var/log/messages on docker host) is like: 
+    # 2023-07-19T10:41:38.076428+02:00 nuc5 sshd[16723]: Failed password for invalid user charly from 192.168.1.201 port 58831 ssh2
+    # 
+    # It will create the following labels (based on the example log line above):
+    #   Labels
+    #   alertname = Failed_user_found
+    #   day = 2023-07-019
+    #   host = nuc5
+    #   ip = 192.168.1.201
+    #   port = 58831 ssh2
+    #   time = 10:41:38.076428+02:00076428+02:00
+    #   unit = sshd[16723]
+    #   user = charly
+    #   Annotations
+    #   description = This is a alert for testing pattern and labels as variables!
+    #   title = Loki Alert Test with pattern
+    #
+    #  !!!! IMPORTANT: Please keep in mind that Loki is scanning also older logs on start. !!!!
+    #  !!!! This means there could be a lot of alert messages even after restart GrafHana. !!!!
+    #
+    - name: withLogs
+      rules:
+        - alert: Failed_user_found
+          expr: 'sum(
+                   count_over_time(
+                     {filename="/logs/messages" } 
+                       |= "Failed password for"
+                       | pattern `<day>T<time> <host> <unit>: <_> <_> <_> <_> <_> <user> <_> <ip> <_> <port>`
+                       [10m]
+                   )
+                 ) by (day, time, host, unit, user, ip, port)'      
+          for: 1m
+          labels:
+            alertname: myalert
+          annotations:
+            description: "This is a alert for testing pattern and labels as variables!" 
+            title: "Loki Alert Test with pattern"

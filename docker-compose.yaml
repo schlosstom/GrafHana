@@ -1,0 +1,108 @@
+version: '3'
+
+networks:
+  grafana:
+
+services:
+  grafana:
+    image: grafana/grafana:9.2.1
+    container_name: grafana
+    ports:
+      - 3000:3000
+    networks:
+      - grafana
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./conf/grafana.ini:/etc/grafana/grafana.ini
+        
+    environment:
+      - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
+    user: "$UserID"
+
+  loki:
+    image: grafana/loki:2.8.2
+    container_name: loki
+    volumes:
+      - ./conf/loki/loki.yaml:/etc/loki/loki.yaml
+      - ./conf/loki/rules/fake/rules.yml:/rules/fake/rules.yml  
+    entrypoint:
+      - /usr/bin/loki
+      - -config.file=/etc/loki/loki.yaml
+      - -log.level=debug  
+    ports:
+      - "3100:3100"
+    networks:
+      - grafana
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    networks:
+      - grafana
+    volumes:
+      - ./conf/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./conf/prometheus/rules:/etc/prometheus/rules
+    entrypoint:
+      - /bin/prometheus
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus 
+      - --web.console.libraries=/usr/share/prometheus/console_libraries 
+      - --web.console.templates=/usr/share/prometheus/consoles 
+      - --web.enable-remote-write-receiver
+        #- --enable-feature=remote-write-receiver 
+
+
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+      - '--log.level=debug'  
+    volumes:
+      - ./conf/alertmanager.yml:/etc/alertmanager/config.yml
+    ports:
+      - 9093:9093
+      - 25:25  
+    networks:
+      - grafana
+
+  hana:
+    build: .
+    image: hana:latest
+    container_name: hana01
+    hostname: hana01
+    privileged: true
+    ports:
+      - 9115:9115
+      - 9100:9100
+      - 9680:9680 
+    networks:
+      - grafana
+    volumes:
+      - ./hana/DATA_UNITS/HDB_SERVER_LINUX_X86_64:/src
+      - ./hana/sap_host_exporter:/tmp/sap_host_exporter  
+      - ./conf/promtail.yml:/etc/promtail.yml
+      - ./conf/blackbox.yml:/etc/blackbox.yml  
+      - /var/run/docker.sock:/var/run/docker.sock  
+      - /var/log/:/logs  
+    deploy:
+      resources:
+        limits:
+          cpus: '2.5'
+          memory: 14336M
+    command:
+      - /bin/bash
+      - -c
+      - |
+        promtail-linux-amd64 -config.file=/etc/promtail.yml &  
+        node_exporter &
+        blackbox_exporter --config.file=/etc/blackbox.yml &
+        $HANA &
+        sleep infinity 
+        # $HANA is:
+        # cd /src && cat templateFile.xml | ./hdblcm --action=install --ignore=check_min_mem -b --configfile=templateFile --read_password_from_stdin=xml 
+
+

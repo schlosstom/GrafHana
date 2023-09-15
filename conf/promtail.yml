@@ -1,0 +1,138 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+
+
+# Collecting the HANA service-available trace file.
+# Labels are:
+#   - Action: service_started service_stopped etc.
+#   - Service: indexserver nameserver etc.
+#   - Watchdog: watchdog (usually only used to separate real Actions from watchdog infos)
+#   - job: service-available
+#   - host: hana01 
+- job_name: services
+  static_configs:
+  - targets:
+      - localhost 
+    labels:
+      job: service-available
+      host: hana01
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/system_availability*.trc
+
+  pipeline_stages: 
+  - match:
+      selector: '{job="service-available"}'
+      stages:
+      - regex:
+          expression: '^(?:.*?;){4}(?P<Action>.*?);(?P<Watchdog>.*?);(?:.*?;){9}(?P<Service>.*?);.*$'
+      - labels:
+          Action:
+          Service: 
+          Watchdog:
+
+# Collecting HANA namserver trace files.
+# Labels are:
+#   - job: nameserver-unit
+#   - Units: FileIO Logger Savepoint etc.
+#   - host: extern
+- job_name: nameserver
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: nameserver-unit
+      host: hana01
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/nameserver_hana01.30001.000.trc
+
+  pipeline_stages:
+  - match:
+      selector: '{job="nameserver-unit"}'
+      stages:
+      - regex:
+          expression: '^(?:.*?\s){4}(?P<Unit>.*?)\s.*$'
+      - labels:
+          Unit:
+
+# Collecting HANA indexserver trace files.
+# Labels are:
+#   - job: nameserver-unit
+#   - Units: FileIO Logger Savepoint etc.
+#   - host: hana01
+- job_name: indexserver
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: indexserver-unit
+      host: hana01
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/DB_HA0/indexserver_hana01.30003.000.trc
+
+  pipeline_stages:
+  - match:
+      selector: '{job="indexserver-unit"}'
+      stages:
+      - regex:
+          expression: '^(?:.*?\s){4}(?P<Unit>.*?)\s.*$'
+      - labels:
+          Unit:
+
+# Collecting HANA backup log files.
+# Labels: are: 
+#   - job: backup
+#   - host: hana01
+- job_name: backup
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: backup
+      host: hana01
+      __path__: /usr/sap/HA0/HDB00/hana01/trace/DB_HA0/backup.log
+
+
+# Collecting stdout and stderr of each docker container.
+# Labels are:
+#   - container: hana01 grafana loki promtail-ext prometheus
+#   - logstream: stdout stderr
+- job_name: container_log
+  docker_sd_configs:
+    - host: unix:///var/run/docker.sock
+      refresh_interval: 5s
+      filters:
+        - name: name
+          values: [hana01,grafana,loki,promtail-ext,prometheus]
+  relabel_configs:
+    - source_labels: ['__meta_docker_container_name']
+      regex: '/(.*)'
+      target_label: 'container'
+    - source_labels: ['__meta_docker_container_log_stream']
+      target_label: 'logstream'
+
+
+# Collecting /var/log/messages from docker host
+#
+- job_name: messages
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: systemlogs
+      host: nuc5
+      __path__: /logs/messages
+
+  pipeline_stages:
+  - match:
+      selector: '{job="systemlogs"}'
+      stages:
+      - regex:
+          expression: '^.* .* (?P<Unit>.*?)\[.*\]: .*$'
+      - labels:
+          Unit:
