@@ -1,4 +1,4 @@
-'´'![GrafHana logo](examples/logo01.png)
+![GrafHana logo](examples/logo01.png)
 
 GrafHana (Grafana and HANA on docker) is a collection of docker containers for developing queries and metrics related to a HANA database. It can also be used for getting familar with Grafana, Prometheus, Loki and Prometheus Alertmanager. And last but not least for getting first experiances on HANA.  
 
