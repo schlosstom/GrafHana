@@ -87,7 +87,7 @@ The SAP HANA installation files (DATA_UNITS/HDB_SERVER_LINUX_X86_64) are not inc
 
   **To run all the container you need at least 16 GB RAM and about 50 GB of diskspace.**
 
-  1. Clone the repository: ```git clone https://gitlab.suse.de/tschloss/grafhana.git```
+  1. Clone the repository.
 
   2. Download and unpack the original HANA sources from SAP.
 
@@ -209,10 +209,3 @@ This feature has been moved to a separate project.
 Please see new repository called: [Grafhista](https://github.com/schlosstom/GrafHista).
 
 
-# Changelogs
-
-* 2023-08-15 - Move GrafHana to GitHub under the GPL License
-* 2023-08-11 - add alertmanager template file.
-* 2023-08-10 - Ingegrate the blackbox exporter.
-* 2023-08-10 - Loki alerts are now possible. 
-* [....]
